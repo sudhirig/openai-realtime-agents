@@ -1,6 +1,8 @@
 import { simpleHandoffScenario } from './simpleHandoff';
 import { customerServiceRetailScenario } from './customerServiceRetail';
 import { chatSupervisorScenario } from './chatSupervisor';
+import { customRealtimeScenario } from './customRealtime';
+import { mcpTestScenario } from './mcpTestAgent';
 
 import type { RealtimeAgent } from '@openai/agents/realtime';
 
@@ -9,6 +11,8 @@ export const allAgentSets: Record<string, RealtimeAgent[]> = {
   simpleHandoff: simpleHandoffScenario,
   customerServiceRetail: customerServiceRetailScenario,
   chatSupervisor: chatSupervisorScenario,
+  customRealtime: customRealtimeScenario,
+  mcpTest: mcpTestScenario,
 };
 
-export const defaultAgentSetKey = 'chatSupervisor';
+export const defaultAgentSetKey = 'customRealtime';

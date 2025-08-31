@@ -1,0 +1,40 @@
+run = "npm run dev"
+entrypoint = "src/app/page.tsx"
+hidden = [".config", "tsconfig.json", "tsconfig.tsbuildinfo", "next-env.d.ts", ".next", ".swc"]
+
+[deployment]
+run = ["npm", "run", "start"]
+build = ["npm", "run", "build"]
+
+[env]
+NODE_ENV = "production"
+
+[nix]
+channel = "stable-23_05"
+
+[languages.typescript]
+pattern = "**/{*.ts,*.js,*.tsx,*.jsx}"
+
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx}"
+
+[languages.javascript.languageServer]
+start = "typescript-language-server --stdio"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", "package.json"]
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+enabledForHosting = false
+
+[ports]
+3000.preview = "https://{{hostname}}:{{port}}"
+3000.open = true

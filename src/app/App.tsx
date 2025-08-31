@@ -9,6 +9,7 @@ import Image from "next/image";
 import Transcript from "./components/Transcript";
 import Events from "./components/Events";
 import BottomToolbar from "./components/BottomToolbar";
+import TextOnlyMode from "./components/TextOnlyMode";
 
 // Types
 import { SessionStatus } from "@/app/types";
@@ -26,6 +27,7 @@ import { customerServiceRetailScenario } from "@/app/agentConfigs/customerServic
 import { chatSupervisorScenario } from "@/app/agentConfigs/chatSupervisor";
 import { customerServiceRetailCompanyName } from "@/app/agentConfigs/customerServiceRetail";
 import { chatSupervisorCompanyName } from "@/app/agentConfigs/chatSupervisor";
+import { customRealtimeCompanyName } from "@/app/agentConfigs/customRealtime";
 import { simpleHandoffScenario } from "@/app/agentConfigs/simpleHandoff";
 
 // Map used by connect logic for scenarios defined via the SDK.
@@ -33,6 +35,7 @@ const sdkScenarioMap: Record<string, RealtimeAgent[]> = {
   simpleHandoff: simpleHandoffScenario,
   customerServiceRetail: customerServiceRetailScenario,
   chatSupervisor: chatSupervisorScenario,
+  customRealtime: allAgentSets.customRealtime,
 };
 
 import useAudioDownload from "./hooks/useAudioDownload";
@@ -212,9 +215,18 @@ function App() {
           reorderedAgents.unshift(agent);
         }
 
-        const companyName = agentSetKey === 'customerServiceRetail'
-          ? customerServiceRetailCompanyName
-          : chatSupervisorCompanyName;
+        let companyName;
+        if (agentSetKey === "customerServiceRetail") {
+          companyName = customerServiceRetailCompanyName;
+        } else if (agentSetKey === "chatSupervisor") {
+          companyName = chatSupervisorCompanyName;
+        } else if (agentSetKey === "customRealtime") {
+          companyName = customRealtimeCompanyName;
+        } else {
+          // For simpleHandoff and other scenarios, use the chatSupervisor company name
+          companyName = chatSupervisorCompanyName;
+        }
+
         const guardrail = createModerationGuardrail(companyName);
 
         await connect({
@@ -228,6 +240,7 @@ function App() {
         });
       } catch (err) {
         console.error("Error connecting via SDK:", err);
+        console.error("Full error details:", JSON.stringify(err, null, 2));
         setSessionStatus("DISCONNECTED");
       }
       return;
@@ -516,15 +529,23 @@ function App() {
       </div>
 
       <div className="flex flex-1 gap-2 px-2 overflow-hidden relative">
-        <Transcript
-          userText={userText}
-          setUserText={setUserText}
-          onSendMessage={handleSendTextMessage}
-          downloadRecording={downloadRecording}
-          canSend={
-            sessionStatus === "CONNECTED"
-          }
-        />
+        <div className="w-1/2 flex flex-col gap-2">
+          {sessionStatus === "CONNECTING" && (
+            <TextOnlyMode 
+              onSendMessage={handleSendTextMessage}
+              isConnected={false}
+            />
+          )}
+          <Transcript
+            userText={userText}
+            setUserText={setUserText}
+            onSendMessage={handleSendTextMessage}
+            downloadRecording={downloadRecording}
+            canSend={
+              sessionStatus === "CONNECTED"
+            }
+          />
+        </div>
 
         <Events isExpanded={isEventsPaneExpanded} />
       </div>

@@ -120,6 +120,26 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
 
       updateStatus('CONNECTING');
 
+      // Check WebRTC support
+      if (!window.RTCPeerConnection) {
+        console.error('WebRTC not supported in this browser');
+        updateStatus('DISCONNECTED');
+        throw new Error('WebRTC not supported in this browser');
+      }
+
+      // Request microphone permission first
+      try {
+        console.log('Requesting microphone permission...');
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('Microphone permission granted');
+        // Stop the test stream
+        stream.getTracks().forEach(track => track.stop());
+      } catch (permissionError) {
+        console.error('Microphone permission denied:', permissionError);
+        updateStatus('DISCONNECTED');
+        throw new Error('Microphone permission required for voice chat. Please allow microphone access and try again.');
+      }
+
       const ek = await getEphemeralKey();
       const rootAgent = initialAgents[0];
 
@@ -128,28 +148,44 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
       const codecParam = codecParamRef.current;
       const audioFormat = audioFormatForCodec(codecParam);
 
-      sessionRef.current = new RealtimeSession(rootAgent, {
-        transport: new OpenAIRealtimeWebRTC({
-          audioElement,
-          // Set preferred codec before offer creation
-          changePeerConnection: async (pc: RTCPeerConnection) => {
-            applyCodec(pc);
-            return pc;
+      try {
+        console.log('Creating RealtimeSession with agent:', rootAgent.name);
+        console.log('Audio element:', audioElement);
+        console.log('Ephemeral key length:', ek?.length);
+        
+        sessionRef.current = new RealtimeSession(rootAgent, {
+          transport: new OpenAIRealtimeWebRTC({
+            audioElement,
+            // Set preferred codec before offer creation
+            changePeerConnection: async (pc: RTCPeerConnection) => {
+              console.log('Applying codec preferences...');
+              applyCodec(pc);
+              return pc;
+            },
+          }),
+          model: 'gpt-realtime',
+          config: {
+            inputAudioFormat: audioFormat,
+            outputAudioFormat: audioFormat,
+            inputAudioTranscription: {
+              model: 'whisper-1',
+            },
           },
-        }),
-        model: 'gpt-4o-realtime-preview-2025-06-03',
-        config: {
-          inputAudioFormat: audioFormat,
-          outputAudioFormat: audioFormat,
-          inputAudioTranscription: {
-            model: 'gpt-4o-mini-transcribe',
-          },
-        },
-        outputGuardrails: outputGuardrails ?? [],
-        context: extraContext ?? {},
-      });
+          outputGuardrails: outputGuardrails ?? [],
+          context: extraContext ?? {},
+        });
 
-      await sessionRef.current.connect({ apiKey: ek });
+        console.log('RealtimeSession created, attempting to connect...');
+        await sessionRef.current.connect({ apiKey: ek });
+        console.log('Successfully connected to RealtimeSession');
+      } catch (connectError) {
+        console.error('Failed to create or connect RealtimeSession:', connectError);
+        console.error('Error name:', (connectError as any)?.name);
+        console.error('Error message:', (connectError as any)?.message);
+        console.error('Error stack:', (connectError as any)?.stack);
+        updateStatus('DISCONNECTED');
+        throw connectError;
+      }
       updateStatus('CONNECTED');
     },
     [callbacks, updateStatus],
