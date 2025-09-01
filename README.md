@@ -1,15 +1,24 @@
 # OpenAI Realtime Agents - Zerodha Voice Trading
 
-This is a Next.js application that demonstrates the OpenAI Realtime API with voice agents, optimized for Zerodha voice trading integration and Replit deployment., using the OpenAI Realtime API and the OpenAI Agents SDK. 
+This is a Next.js application that demonstrates the OpenAI Realtime API with voice agents, optimized for Zerodha voice trading integration and Replit deployment.
+
+## 🤖 AI Models Used
+
+- **Primary Model:** `gpt-realtime` - OpenAI's latest realtime voice model (released Aug 2025)
+- **Transcription:** `whisper-1` - OpenAI's speech-to-text model
+- **Voice:** Alloy voice with 0.8 temperature for natural conversations
+- **Audio Codec:** Opus (48 kHz) with PCMU/PCMA (8 kHz) fallback for phone integration 
 
 ## About the OpenAI Agents SDK
 
-This project uses the [OpenAI Agents SDK](https://github.com/openai/openai-agents-js), a toolkit for building, managing, and deploying advanced AI agents. The SDK provides:
+This project uses the [OpenAI Agents SDK](https://github.com/openai/openai-agents-js) with the latest `gpt-realtime` model, providing:
 
-- A unified interface for defining agent behaviors and tool integrations.
-- Built-in support for agent orchestration, state management, and event handling.
-- Easy integration with the OpenAI Realtime API for low-latency, streaming interactions.
-- Extensible patterns for multi-agent collaboration, handoffs, tool use, and guardrails.
+- Real-time voice interaction with `gpt-realtime` model
+- `whisper-1` transcription for accurate voice-to-text conversion
+- WebRTC audio streaming for low-latency communication
+- Multi-language support (Hindi, English, Tamil, Telugu)
+- Agent orchestration, state management, and event handling
+- Extensible patterns for multi-agent collaboration, handoffs, tool use, and guardrails
 
 For full documentation, guides, and API references, see the official [OpenAI Agents SDK Documentation](https://github.com/openai/openai-agents-js#readme).
 
