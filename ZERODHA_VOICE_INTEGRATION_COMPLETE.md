@@ -6,19 +6,42 @@
 
 **Repository:** `https://github.com/sudhirig/openai-realtime-agents`
 
-**Integration Method:** Direct GitHub clone to Replit with phased implementation
+**Integration Method:** Direct GitHub clone to Repository URL: https://github.com/sudhirig/openai-realtime-agents
 
-**Models Used:**
-- **Primary:** `gpt-realtime` - OpenAI's latest realtime voice model (Aug 2025)
-- **Transcription:** `whisper-1` - Speech-to-text processing
-- **Voice:** Alloy with 0.8 temperature for natural conversations
-- **Audio:** Opus (48 kHz) with PCMU/PCMA (8 kHz) fallback
+📁 Key Files to Reference:
+- ZERODHA_VOICE_INTEGRATION_COMPLETE.md - Complete integration guide (this file)
+- README.md - Project overview and setup instructions
+- src/app/App.tsx - Main voice agent orchestrator (573 lines)
+- src/app/hooks/useRealtimeSession.ts - Core voice session logic (246 lines)
+- src/app/components/Transcript.tsx - Chat UI component (240 lines)
+- src/app/api/session/route.ts - OpenAI API integration
+- .replit & replit.nix - Replit configuration files
+
+Models Used:
+- Primary: gpt-realtime (OpenAI's latest realtime voice model)
+- Transcription: whisper-1 (Speech-to-text processing)
+- Voice: Alloy with 0.8 temperature
+- Audio: Opus (48 kHz) with PCMU/PCMA (8 kHz) fallback
+
+Dependencies Required:
+- @openai/agents: ^0.0.5
+- openai: ^4.77.3
+- uuid: ^11.0.4
+- zod: ^3.24.1
+
+Environment Variables:
+- OPENAI_API_KEY (add to Replit Secrets)
+
+📖 Additional Resources:
+- Browse repository files at: https://github.com/sudhirig/openai-realtime-agents/tree/main
+- Review complete codebase structure before implementation
+- Check existing Replit configuration in .replit file
+- Reference component interfaces in src/app/types.ts
 
 ## 🚨 CRITICAL: Safe Implementation Required
 
 ### Replit AI Prompt (Copy-Paste Ready)
 
-```
 ⚠️ CRITICAL: SAFE IMPLEMENTATION REQUIRED
 
 IMPORTANT: I need a PHASED IMPLEMENTATION PLAN and TODO LIST first. Do NOT start coding immediately.
