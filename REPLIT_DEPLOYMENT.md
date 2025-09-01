@@ -1,6 +1,19 @@
-# 🚀 Replit Deployment Instructions
+# 🚀 Replit Deployment Guide - Zerodha Voice Agent
+
+## Complete guide for deploying Zerodha Voice Trading Agent on Replit via GitHub clone with autoscaling and production-ready configuration
 
 ## Quick Setup for Zerodha Voice Trading Agent
+
+### 🔧 Step 1: GitHub Clone Setup
+
+### Import from GitHub (Recommended)
+```bash
+# In Replit:
+# 1. Click "Create Repl"
+# 2. Select "Import from GitHub"
+# 3. Enter: https://github.com/yourusername/openai-realtime-agents
+# 4. Replit auto-detects configuration
+```
 
 ### 1. Fork to Replit
 1. Go to [Replit](https://replit.com)
@@ -33,6 +46,13 @@ In Replit Shell, run:
    - Build: `npm run build`
    - Run: `npm run start`
    - Machine: 1vCPU, 2GB RAM
+
+## 📋 Pre-Deployment Checklist
+
+- [ ] GitHub repository ready (this repo)
+- [ ] OpenAI API key ready
+- [ ] Replit account created
+- [ ] No manual file copying needed
 
 ## 🎯 Current Features
 

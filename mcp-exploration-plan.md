@@ -1,7 +1,6 @@
-# Safe MCP Exploration Plan
+# Safe MCP Integration Plan - Zerodha Voice Agent
 
-## 🎯 Objective
-Explore MCP (Model Context Protocol) capabilities with OpenAI Realtime API without disrupting the working implementation.
+This document outlines MCP (Model Context Protocol) integration with the Zerodha Voice Trading Agent for enhanced context and memory capabilities.
 
 ## 🛡️ Safety Strategy
 1. **Separate test agent** - Create isolated MCP test configuration

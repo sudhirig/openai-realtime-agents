@@ -1,17 +1,15 @@
-# Zerodha Voice Trading Agent Integration Plan
+# 🎙️ Zerodha Voice Trading Agent - Direct Deployment Plan
 
-## 🎯 Objective
-Create a real-time voice trading agent that integrates directly with Zerodha Kite Connect API, supports vernacular languages, and enables voice-controlled trading operations.
+**Streamlined plan for deploying complete voice trading agent via GitHub clone on Replit**gent that integrates directly with Zerodha Kite Connect API, supports vernacular languages, and enables voice-controlled trading operations.
 
 ## 🏗️ Architecture Overview
 
-### **Core Components**
-1. **Voice Agent** - OpenAI Realtime API with gpt-realtime model
-2. **Kite Connect API** - Direct integration with Zerodha's REST APIs and WebSocket
-3. **Vernacular Language Support** - Multi-language voice recognition
-4. **Trading Engine** - Real-time order execution and portfolio management
-5. **Risk Management** - Safety checks and compliance features
-6. **Authentication Service** - OAuth flow and session management
+### **Direct Integration Approach**
+- **Single Repository** - Complete voice trading solution
+- **Replit Deployment** - One-click GitHub clone deployment
+- **Zerodha Integration** - Direct API integration or component import
+- **OpenAI Realtime** - Voice processing and AI responses
+- **Built-in Safety** - Trading confirmations and risk management
 
 ## 📋 Implementation Phases
 

@@ -1,6 +1,6 @@
-# Realtime API Agents Demo
+# OpenAI Realtime Agents - Zerodha Voice Trading
 
-This is a demonstration of more advanced patterns for voice agents, using the OpenAI Realtime API and the OpenAI Agents SDK. 
+This is a Next.js application that demonstrates the OpenAI Realtime API with voice agents, optimized for Zerodha voice trading integration and Replit deployment., using the OpenAI Realtime API and the OpenAI Agents SDK. 
 
 ## About the OpenAI Agents SDK
 
