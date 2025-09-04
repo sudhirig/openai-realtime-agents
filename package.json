@@ -7,9 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "replit:dev": "npm run dev",
+    "replit:dev": "PORT=3000 npm run dev",
     "replit:build": "npm run build && npm run start",
-    "setup": "npm install && npm run build"
+    "setup": "npm install && npm run build",
+    "replit:install": "npm install --prefer-offline --no-audit",
+    "clean": "rm -rf .next node_modules package-lock.json",
+    "fresh-install": "npm run clean && npm install",
+    "test-health": "curl -s http://localhost:3000/api/health | jq .",
+    "test-session": "curl -s http://localhost:3000/api/session | jq ."
   },
   "dependencies": {
     "@openai/agents": "^0.0.5",

@@ -35,7 +35,8 @@ This guide will help you deploy the OpenAI Realtime Agents application on Replit
    - Add: `OPENAI_API_KEY` = `your_openai_api_key_here`
 
 3. **Deploy:**
-   - Click "Run" button
+   - Click "Run" button or use `./startup.sh`
+   - Enhanced startup includes health checks and auto-recovery
    - Application will start on assigned Replit URL
    - Test voice functionality in browser
 

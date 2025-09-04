@@ -1,79 +1,75 @@
 #!/bin/bash
 
-# Zerodha Voice Trading Agent - Replit Startup Script
+# OpenAI Realtime Agents - Enhanced Replit Startup Script
 
-echo "🚀 Starting Zerodha Voice Trading Agent on Replit..."
+set -e
 
-# Check if Node.js is available
-if ! command -v node &> /dev/null; then
-    echo "❌ Node.js not found. Please check Replit environment."
-    exit 1
-fi
+echo "🚀 Starting OpenAI Realtime Agents..."
 
-# Check if npm is available
-if ! command -v npm &> /dev/null; then
-    echo "❌ npm not found. Please check Replit environment."
-    exit 1
-fi
+# Environment Check
+echo "📋 System Check..."
+node --version
+npm --version
 
-echo "✅ Node.js $(node --version) detected"
-echo "✅ npm $(npm --version) detected"
-
-# Install dependencies if node_modules doesn't exist
-if [ ! -d "node_modules" ]; then
-    echo "📦 Installing dependencies..."
-    npm install
-    if [ $? -ne 0 ]; then
-        echo "❌ Failed to install dependencies"
-        exit 1
-    fi
+# Critical Environment Variable Check
+echo "🔐 Environment Variables..."
+if [ -z "$OPENAI_API_KEY" ]; then
+  echo "❌ CRITICAL: OPENAI_API_KEY not set!"
+  echo "   🔧 Add to Replit Secrets: OPENAI_API_KEY"
+  echo "   🚫 Cannot start without API key"
+  exit 1
 else
-    echo "✅ Dependencies already installed"
+  echo "✅ OPENAI_API_KEY configured"
 fi
 
-# Check for required environment variables
-echo "🔍 Checking environment variables..."
-
-required_vars=("OPENAI_API_KEY")
-missing_vars=()
-
-for var in "${required_vars[@]}"; do
-    if [ -z "${!var}" ]; then
-        missing_vars+=("$var")
-    fi
-done
-
-if [ ${#missing_vars[@]} -ne 0 ]; then
-    echo "❌ Missing required environment variables:"
-    for var in "${missing_vars[@]}"; do
-        echo "   - $var"
-    done
-    echo ""
-    echo "Please set these in Replit Secrets:"
-    echo "1. Go to Secrets tab in Replit"
-    echo "2. Add each required variable"
-    echo "3. Restart the application"
-    exit 1
+# Handle fresh installation
+if [ "$1" = "--fresh" ]; then
+  echo "🧹 Fresh installation..."
+  rm -rf .next node_modules package-lock.json
 fi
 
-echo "✅ All required environment variables found"
-
-# Build the application
-echo "🔨 Building application..."
-npm run build
-if [ $? -ne 0 ]; then
-    echo "❌ Build failed"
-    exit 1
+# Install dependencies
+if [ ! -d "node_modules" ] || [ "$1" = "--fresh" ]; then
+  echo "📦 Installing dependencies..."
+  npm install --prefer-offline --no-audit
+else
+  echo "✅ Dependencies ready"
 fi
 
-echo "✅ Build completed successfully"
+# Build application
+echo "🔨 Building..."
+if ! npm run build; then
+  echo "❌ Build failed, trying fresh install..."
+  npm run fresh-install
+  npm run build
+fi
 
-# Start the application
-echo "🎯 Starting Zerodha Voice Trading Agent..."
-echo "🌐 Application will be available at your Replit URL"
-echo "🎙️ Voice trading capabilities enabled"
-echo "📱 Vernacular language support: Hindi, Tamil, Telugu, Bengali"
-echo ""
+# Health check function
+health_check() {
+  echo "🏥 Health check..."
+  sleep 2
+  if curl -s http://localhost:3000/api/health > /dev/null 2>&1; then
+    echo "✅ Health check passed"
+    return 0
+  else
+    echo "❌ Health check failed"
+    return 1
+  fi
+}
 
-# Start the Next.js application
-npm run start
+# Start server
+echo "🎯 Starting server..."
+npm run start &
+SERVER_PID=$!
+
+# Verify startup
+if health_check; then
+  echo "🎉 SUCCESS!"
+  echo "🌐 App URL: https://$REPL_SLUG.$REPL_OWNER.repl.co"
+  echo "🎤 Voice AI ready!"
+  wait $SERVER_PID
+else
+  echo "🚨 Startup failed"
+  kill $SERVER_PID 2>/dev/null || true
+  exit 1
+fi

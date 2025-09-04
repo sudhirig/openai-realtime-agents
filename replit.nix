@@ -1,21 +1,15 @@
 { pkgs }: {
   deps = [
-    # Node.js runtime and package management
     pkgs.nodejs_20
-    pkgs.nodePackages.npm
-    pkgs.nodePackages.yarn
-    
-    # TypeScript and language support
-    pkgs.nodePackages.typescript
-    pkgs.nodePackages.typescript-language-server
-    pkgs.nodePackages.vscode-json-languageserver
-    
-    # Build tools and system utilities
+    pkgs.npm-9_x
+    pkgs.yarn
     pkgs.gcc
     pkgs.pkg-config
     pkgs.libffi
     pkgs.openssl
     pkgs.zlib
+    pkgs.libxml2
+    pkgs.libxslt
     pkgs.curl
     pkgs.wget
     pkgs.git
@@ -30,15 +24,10 @@
     pkgs.htop
     pkgs.tree
     pkgs.jq
-    
-    # Audio and WebRTC dependencies
-    pkgs.libuv
-    pkgs.libxml2
-    pkgs.libxslt
+    pkgs.sqlite
+    pkgs.chromium
   ];
-  
   env = {
-    # Library paths for proper linking
     LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
       pkgs.stdenv.cc.cc.lib
       pkgs.zlib
@@ -46,17 +35,5 @@
       pkgs.libffi
       pkgs.openssl
     ];
-    
-    # Node.js configuration
-    NODE_PATH = "$REPL_HOME/node_modules";
-    NPM_CONFIG_PREFIX = "$REPL_HOME/.npm-global";
-    PATH = "$REPL_HOME/.npm-global/bin:$PATH";
-    
-    # Next.js optimization
-    NEXT_TELEMETRY_DISABLED = "1";
-    NODE_OPTIONS = "--max-old-space-size=4096";
-    
-    # Replit environment
-    REPLIT = "true";
   };
 }
