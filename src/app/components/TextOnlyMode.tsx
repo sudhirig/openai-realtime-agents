@@ -6,7 +6,7 @@ interface TextOnlyModeProps {
   isConnected: boolean;
 }
 
-export default function TextOnlyMode({ onSendMessage, isConnected }: TextOnlyModeProps) {
+export default function TextOnlyMode({}: TextOnlyModeProps) {
   const [message, setMessage] = useState('');
   const [responses, setResponses] = useState<Array<{role: string, content: string}>>([]);
 

@@ -1,9 +1,78 @@
-[nix]
-channel = "stable-23.11"
+# OpenAI Realtime Agents - Voice AI Application
+# 
+# VOICE AI CONFIGURATION:
+# - Model: gpt-realtime with whisper-1 transcription
+# - Voice: alloy (temperature: 0.8, max tokens: 4096)  
+# - Turn Detection: Server VAD (0.5 threshold, 300ms prefix, 500ms silence)
+# - WebRTC: Opus 48kHz with PCMU/PCMA 8kHz fallback
+# - Configuration: /src/app/agentConfigs/customRealtime.ts
+#
+# REPLIT DEPLOYMENT:
+# - Framework: Next.js 15.3.3 with TypeScript
+# - Runtime: Node.js 20+ with npm
+# - SSL: Required for microphone access (auto-enabled on Replit)
+# - Scaling: Supports Replit Autoscale deployment
+#
+# ENVIRONMENT SETUP:
+# 1. Add OPENAI_API_KEY to Secrets tab
+# 2. Ensure microphone permissions in browser
+# 3. Test with: https://your-repl.username.repl.co
+
+run = "./startup.sh"
+entrypoint = "src/app/page.tsx"
+hidden = [".config", ".env", "tsconfig.json", "tsconfig.tsbuildinfo", "next-env.d.ts", ".next", ".swc", "node_modules"]
 
 [deployment]
-run = ["sh", "-c", "npm run build && npm run start"]
-deploymentTarget = "cloudrun"
+run = ["sh", "-c", "./startup.sh"]
+build = ["npm", "run", "build"]
+publishDir = ".next"
+
+[env]
+REPLIT = "true"
+NODE_ENV = "development"
+NEXT_TELEMETRY_DISABLED = "1"
+PORT = "3000"
+
+[nix]
+channel = "stable-23_11"
+
+[languages.typescript]
+pattern = "**/{*.ts,*.tsx}"
+syntax = "typescript"
+
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx}"
+syntax = "javascript"
+
+[languages.javascript.languageServer]
+start = "typescript-language-server --stdio"
+
+[languages.json]
+pattern = "**/*.json"
+syntax = "json"
+
+[languages.json.languageServer]
+start = "vscode-json-languageserver --stdio"
+
+[debugger]
+support = true
+
+[unitTest]
+language = "nodejs"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", "package.json"]
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+enabledForHosting = true
 
 # Primary Next.js application port
 [[ports]]
@@ -11,23 +80,14 @@ localPort = 3000
 externalPort = 80
 exposeLocalhost = false
 
-# API and WebRTC ports
+# WebRTC signaling and API endpoints
 [[ports]]
 localPort = 3001
 externalPort = 3001
 exposeLocalhost = false
 
-[env]
-REPLIT = "true"
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", "package.json"]
-
-[languages]
-
-[languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
-
-[languages.javascript.languageServer]
-start = "typescript-language-server --stdio"
-
+# WebSocket connections for real-time audio
+[[ports]]
+localPort = 8080
+externalPort = 8080
+exposeLocalhost = false
