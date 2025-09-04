@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    console.log('API Key check:', process.env.OPENAI_API_KEY ? `Found: ${process.env.OPENAI_API_KEY.slice(0, 10)}...${process.env.OPENAI_API_KEY.slice(-10)}` : 'Missing');
+    console.log('All OPENAI env vars:', Object.keys(process.env).filter(k => k.includes('OPENAI')));
+    
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OPENAI_API_KEY not configured" },
+        { status: 500 }
+      );
+    }
+
     const response = await fetch(
       "https://api.openai.com/v1/realtime/sessions",
       {

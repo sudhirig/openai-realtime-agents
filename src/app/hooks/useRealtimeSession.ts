@@ -130,14 +130,42 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
       // Request microphone permission first
       try {
         console.log('Requesting microphone permission...');
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Check if getUserMedia is available
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia not supported in this browser');
+        }
+        
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          } 
+        });
         console.log('Microphone permission granted');
         // Stop the test stream
         stream.getTracks().forEach(track => track.stop());
-      } catch (permissionError) {
+      } catch (permissionError: any) {
         console.error('Microphone permission denied:', permissionError);
+        console.error('Error details:', {
+          name: permissionError?.name,
+          message: permissionError?.message,
+          stack: permissionError?.stack
+        });
+        
         updateStatus('DISCONNECTED');
-        throw new Error('Microphone permission required for voice chat. Please allow microphone access and try again.');
+        
+        // Provide more specific error messages
+        if (permissionError?.name === 'NotAllowedError') {
+          throw new Error('🎤 Microphone access denied. Please click the microphone icon in your browser address bar and allow access, then try again.');
+        } else if (permissionError?.name === 'NotFoundError') {
+          throw new Error('🎤 No microphone found. Please connect a microphone and try again.');
+        } else if (permissionError?.name === 'NotSupportedError') {
+          throw new Error('🎤 Microphone not supported in this browser. Please use Chrome, Firefox, or Safari.');
+        } else {
+          throw new Error(`🎤 Microphone error: ${permissionError?.message || 'Unknown error'}`);
+        }
       }
 
       const ek = await getEphemeralKey();

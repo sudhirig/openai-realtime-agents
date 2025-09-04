@@ -14,34 +14,36 @@ SAFETY REQUIREMENTS:
 - Implement in isolated phases to prevent breaking existing functionality
 - Provide rollback strategy for each phase
 
-## Task: Import OpenAI Realtime Voice Agent into Zerodha App
+## Task: Integrate OpenAI Realtime Voice Agent into Zerodha Vite App
 
-I need you to create a new folder called `openairealtime` in my existing Zerodha Replit app and import the complete voice trading agent from this GitHub repository: https://github.com/sudhirig/openai-realtime-agents
+⚠️ COMPATIBILITY UPDATE: Your Zerodha app uses Vite + React 19, but the voice agent uses Next.js + React 18. We need to extract and adapt the core voice components for Vite compatibility.
 
-### Folder Structure to Create:
+### Integration Structure (NO separate folder):
 ```
-zerodha-app/
-├── existing-zerodha-files/    # Keep unchanged
-└── openairealtime/            # NEW FOLDER - Create this
-    ├── src/
-    │   └── app/
-    │       ├── components/
-    │       ├── hooks/
-    │       ├── api/
-    │       ├── agentConfigs/
-    │       └── lib/
-    ├── package.json
-    ├── .env.example
-    ├── .replit
-    ├── replit.nix
-    └── README.md
+zerodha-app/src/
+├── components/
+│   └── voice/                 # NEW - Voice components
+│       ├── VoiceChat.tsx
+│       ├── Transcript.tsx
+│       ├── VoiceControls.tsx
+│       └── BottomToolbar.tsx
+├── hooks/
+│   └── useVoiceSession.ts     # NEW - Vite-compatible voice hook
+├── services/
+│   └── voice-api.ts           # NEW - Direct OpenAI API service
+├── types/
+│   └── voice.ts               # NEW - Voice type definitions
+└── contexts/
+    ├── VoiceContext.tsx       # NEW - Voice state management
+    └── TranscriptContext.tsx  # NEW - Chat transcript state
 ```
 
-### What to Import:
-- Clone/download ALL files from: https://github.com/sudhirig/openai-realtime-agents
-- Place everything inside the `openairealtime/` folder
-- Preserve exact folder structure from repository
-- Do NOT modify any existing Zerodha files
+### What to Extract from Repository:
+- **Core Logic:** `src/app/hooks/useRealtimeSession.ts` → Adapt for Vite
+- **Components:** `src/app/components/` → Remove Next.js dependencies
+- **Types:** `src/app/types.ts` → Copy type definitions
+- **Agent Config:** `src/app/agentConfigs/` → Trading agent configuration
+- **Skip:** Next.js API routes, .replit files, package.json (incompatible)
 
 ## 🎯 FIRST STEP: PLANNING ONLY
 
@@ -115,21 +117,21 @@ Create a detailed markdown document called `ZERODHA_VOICE_INTEGRATION_PLAN.md` w
 - Voice: Alloy with 0.8 temperature for natural conversations
 - Audio: Opus (48 kHz) with PCMU/PCMA (8 kHz) fallback for phone integration
 
-**Core Dependencies to Install:**
+**Dependencies to Add (use YOUR existing versions):**
 ```json
 {
-  "@openai/agents": "^0.0.5",    // OpenAI Realtime SDK
-  "openai": "^4.77.3",           // OpenAI API client  
-  "uuid": "^11.0.4",             // Session management
+  "@openai/agents": "^0.0.17",   // Use YOUR newer version (not 0.0.5)
+  "openai": "^5.12.2",           // Use YOUR newer version (not 4.77.3)
+  "uuid": "^11.0.4",             // ADD this missing dependency
   "zod": "^3.24.1"               // Schema validation
 }
 ```
 
-**Framework Requirements:**
-- Next.js 15+ (app router)
-- React 18+ or 19
-- TypeScript support
-- WebRTC audio support
+**Framework Compatibility:**
+- ✅ Vite + React 19 (your current setup)
+- ✅ TypeScript support
+- ✅ WebRTC audio support
+- ❌ Skip Next.js specific features (API routes, etc.)
 
 ## 🔑 Environment Configuration:
 
@@ -165,14 +167,15 @@ OPENAI_API_KEY=your_openai_api_key_here
 - Check component interfaces in src/app/types.ts
 - Reference integration guide in ZERODHA_VOICE_INTEGRATION_COMPLETE.md
 
-## 🚨 Critical Integration Issues to Address:
+## 🚨 Critical Vite Compatibility Issues to Address:
 
 **Known Issues (document solutions in your plan):**
-1. Component interface mismatches in ARIAVoiceChat.tsx
-2. Missing 'session' return value in useRealtimeSession hook
-3. Context provider dependencies (TranscriptProvider, EventProvider)
-4. API route dependencies (/api/session endpoint)
-5. TypeScript interface alignments
+1. **Next.js API Routes:** Convert `/api/session` to Vite API endpoint or direct service
+2. **useRealtimeSession Hook:** Remove Next.js dependencies, adapt for React 19
+3. **Component Interfaces:** Update for newer OpenAI SDK versions (0.0.17 vs 0.0.5)
+4. **Context Providers:** Ensure React 19 compatibility
+5. **Model Compatibility:** Verify `gpt-realtime` works with OpenAI SDK 5.12.2
+6. **WebRTC Audio:** Test audio streaming in Vite environment
 
 **Repository URL:** https://github.com/sudhirig/openai-realtime-agents
 

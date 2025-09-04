@@ -1,3 +1,17 @@
+# OpenAI Realtime Agents - Zerodha Voice Trading
+# Voice AI Configuration:
+# - Model: gpt-realtime with whisper-1 transcription
+# - Voice: alloy (temperature: 0.8, max tokens: 4096)  
+# - Turn Detection: Server VAD (0.5 threshold, 300ms prefix, 500ms silence)
+# - Working Port: 3003 (auto-detects available ports)
+# - Custom prompt in: /src/app/agentConfigs/customRealtime.ts
+#
+# STARTUP TROUBLESHOOTING:
+# 1. Check environment conflicts: printenv | grep OPENAI_API_KEY
+# 2. If system variable exists, remove: unset OPENAI_API_KEY  
+# 3. Clean restart: rm -rf .next && npm install && PORT=3003 npm run dev
+# 4. Verify: curl -s http://localhost:3003/api/session | jq .
+
 run = "npm run dev"
 entrypoint = "src/app/page.tsx"
 hidden = [".config", "tsconfig.json", "tsconfig.tsbuildinfo", "next-env.d.ts", ".next", ".swc"]
